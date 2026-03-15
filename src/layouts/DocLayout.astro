@@ -1,17 +1,30 @@
 ---
-// DocLayout.astro — The main layout for book pages
-// Works with both .astro pages and .md pages.
-// When used with .md, Astro passes: frontmatter, headings
+// DocLayout.astro — The main layout for book pages.
+// All doc pages are rendered through src/pages/docs/[...slug].astro which calls
+// render() and passes typed props directly.  The `frontmatter` field is kept for
+// backward-compatibility in case a markdown file uses the legacy `layout:` directive.
 
+import type { MarkdownHeading } from "astro";
 import "../styles/global.css";
 import { navGroups, allPages, type NavItem } from "../nav";
 
+// ------------------------------------------------------------------
+// Props interface — fully typed.
+//
+// title        — page title shown in <title> and as the H1.  Required.
+// description  — meta description for SEO.  Optional.
+// headings     — array of headings extracted by render(), used for the
+//                right-side Table of Contents.  Uses Astro's built-in
+//                MarkdownHeading type: { depth, slug, text }.
+// frontmatter  — legacy: Astro injects this when a .md file sets
+//                `layout: ../../layouts/DocLayout.astro` in its frontmatter.
+//                Prefer passing title/description directly instead.
+// ------------------------------------------------------------------
 interface Props {
-  // Used by .astro pages directly
-  title?: string;
+  title: string;
   description?: string;
-  headings?: { depth: number; text: string; slug: string }[];
-  // Used by .md pages (Astro passes these automatically)
+  headings?: MarkdownHeading[];
+  /** @deprecated pass title/description directly instead */
   frontmatter?: {
     title?: string;
     description?: string;
@@ -19,6 +32,7 @@ interface Props {
 }
 
 const { frontmatter, headings = [] } = Astro.props;
+// frontmatter props are only present when using the legacy layout directive
 const title = Astro.props.title ?? frontmatter?.title ?? "Book";
 const description = Astro.props.description ?? frontmatter?.description ?? "";
 
