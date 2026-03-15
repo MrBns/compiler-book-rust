@@ -4,8 +4,11 @@
 // markdown files directly in src/pages/, we define a collection here and
 // let Astro handle loading, validation, and type-safety automatically.
 
-import { defineCollection, z } from "astro:content";
+import { defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
+// z is imported from "astro/zod" — Astro v6's canonical re-export of zod v4.
+// Importing z from "astro:content" is deprecated in Astro v5+ and removed in v6.
+import { z } from "astro/zod";
 
 // Define the schema for a single doc page's frontmatter.
 // zod validates that every markdown file has the required fields.

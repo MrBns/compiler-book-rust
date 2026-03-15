@@ -69,10 +69,12 @@ const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
           <a href="https://github.com/MrBns/compiler-book-rust" target="_blank">GitHub</a>
         </nav>
         <div class="navbar__right">
-          <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-            <span id="themeIcon">🌙</span>
-            <span id="themeLabel">Dark</span>
-          </button>
+          <!-- Three-way theme switcher: Light / Dark / Device -->
+          <div class="theme-switcher" role="group" aria-label="Color theme">
+            <button class="theme-switcher__btn" data-mode="light" aria-label="Light theme">☀️ Light</button>
+            <button class="theme-switcher__btn" data-mode="dark"  aria-label="Dark theme">🌙 Dark</button>
+            <button class="theme-switcher__btn" data-mode="device" aria-label="Use device theme">💻 Device</button>
+          </div>
         </div>
       </div>
     </nav>
