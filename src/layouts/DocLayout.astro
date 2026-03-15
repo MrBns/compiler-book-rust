@@ -46,17 +46,20 @@ const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
   <body>
     <!-- NAVBAR -->
     <nav class="navbar">
-      <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle menu">☰</button>
-      <a href="/" class="navbar__logo">Compiler<span>Book</span> 🦀</a>
-      <nav class="navbar__nav">
-        <a href="/docs/getting-started">Guide</a>
-        <a href="https://github.com/MrBns/compiler-book-rust" target="_blank">GitHub</a>
-      </nav>
-      <div class="navbar__right">
-        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-          <span id="themeIcon">🌙</span>
-          <span id="themeLabel">Dark</span>
-        </button>
+      <!-- navbar__inner centers all navbar content within the 1920px max-width -->
+      <div class="navbar__inner">
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle menu">☰</button>
+        <a href="/" class="navbar__logo">Compiler<span>Book</span> 🦀</a>
+        <nav class="navbar__nav">
+          <a href="/docs/getting-started">Guide</a>
+          <a href="https://github.com/MrBns/compiler-book-rust" target="_blank">GitHub</a>
+        </nav>
+        <div class="navbar__right">
+          <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+            <span id="themeIcon">🌙</span>
+            <span id="themeLabel">Dark</span>
+          </button>
+        </div>
       </div>
     </nav>
 

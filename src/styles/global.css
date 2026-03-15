@@ -32,7 +32,8 @@
   --sidebar-width:   272px;
   --toc-width:       220px;
   --nav-height:      64px;
-  --content-max:     720px;
+  --content-max:     860px;
+  --layout-max:      1920px;
   --transition:      0.2s ease;
 }
 
@@ -77,12 +78,20 @@ a:hover { color: var(--c-brand-light); text-decoration: underline; }
   height: var(--nav-height);
   background: var(--c-bg);
   border-bottom: 1px solid var(--c-border);
+  z-index: 100;
+  backdrop-filter: blur(8px);
+}
+
+/* Inner wrapper: centers navbar content within the 1920px max-width */
+.navbar__inner {
+  max-width: var(--layout-max);
+  margin: 0 auto;
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   padding: 0 24px;
   gap: 32px;
-  z-index: 100;
-  backdrop-filter: blur(8px);
 }
 
 .navbar__logo {
@@ -123,20 +132,34 @@ a:hover { color: var(--c-brand-light); text-decoration: underline; }
 .theme-toggle:hover { background: var(--c-bg-mute); }
 
 /* ---------- Layout wrapper ---------- */
+/*
+ * The entire [sidebar][content][toc] group is capped at --layout-max
+ * and centered with margin: 0 auto. align-items: flex-start is required
+ * so that sticky children (sidebar, toc) work correctly.
+ */
 .layout {
   display: flex;
+  align-items: flex-start;
+  max-width: var(--layout-max);
+  margin: 0 auto;
+  width: 100%;
   padding-top: var(--nav-height);
   min-height: 100vh;
 }
 
 /* ---------- Sidebar ---------- */
+/*
+ * Changed from position:fixed to position:sticky so it participates in the
+ * flex layout and respects the centered max-width container.
+ * On mobile (≤768px) it reverts back to position:fixed for the overlay effect.
+ */
 .sidebar {
-  position: fixed;
+  position: sticky;
   top: var(--nav-height);
-  left: 0;
-  width: var(--sidebar-width);
   height: calc(100vh - var(--nav-height));
   overflow-y: auto;
+  flex-shrink: 0;
+  width: var(--sidebar-width);
   border-right: 1px solid var(--c-border);
   padding: 24px 0 40px;
   background: var(--c-bg);
@@ -190,12 +213,14 @@ a:hover { color: var(--c-brand-light); text-decoration: underline; }
 }
 
 /* ---------- Main content area ---------- */
+/*
+ * flex:1 + min-width:0 fills the space between sidebar and toc.
+ * The old margin-left/right are removed — sticky siblings handle spacing.
+ */
 .main {
-  margin-left: var(--sidebar-width);
-  margin-right: var(--toc-width);
   flex: 1;
+  min-width: 0;
   padding: 48px 48px 96px;
-  max-width: calc(var(--sidebar-width) + var(--content-max) + var(--toc-width));
 }
 
 .content {
@@ -389,13 +414,16 @@ a:hover { color: var(--c-brand-light); text-decoration: underline; }
 }
 
 /* ---------- Table of Contents (right) ---------- */
+/*
+ * Changed from position:fixed to position:sticky — same reasoning as sidebar.
+ */
 .toc {
-  position: fixed;
+  position: sticky;
   top: var(--nav-height);
-  right: 0;
-  width: var(--toc-width);
   height: calc(100vh - var(--nav-height));
   overflow-y: auto;
+  flex-shrink: 0;
+  width: var(--toc-width);
   padding: 32px 20px 40px;
   font-size: 0.78rem;
 }
@@ -548,17 +576,20 @@ a:hover { color: var(--c-brand-light); text-decoration: underline; }
 /* ---------- Responsive ---------- */
 @media (max-width: 1200px) {
   .toc { display: none; }
-  .main { margin-right: 0; }
 }
 
 @media (max-width: 768px) {
+  /* On mobile the sidebar becomes a fixed overlay again */
   .sidebar {
+    position: fixed;
+    left: 0;
+    top: var(--nav-height);
     transform: translateX(-100%);
     transition: transform var(--transition);
     z-index: 50;
   }
   .sidebar.open { transform: translateX(0); }
-  .main { margin-left: 0; padding: 32px 20px 80px; }
+  .main { padding: 32px 20px 80px; }
   .sidebar-toggle { display: flex; }
   .hero__title { font-size: 2rem; }
   .page-nav { flex-direction: column; }
