@@ -1,5 +1,4 @@
 ---
-layout: ../../layouts/DocLayout.astro
 title: "What is a Lexer?"
 description: "Understand how a lexer works before we build one."
 ---

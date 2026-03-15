@@ -1,5 +1,4 @@
 ---
-layout: ../../layouts/DocLayout.astro
 title: "Putting It All Together"
 description: "Connect all compiler phases and run your first complete compilation."
 ---

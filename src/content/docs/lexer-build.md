@@ -1,5 +1,4 @@
 ---
-layout: ../../layouts/DocLayout.astro
 title: "Building the Lexer"
 description: "Write the lexer in Rust that turns source code text into a list of tokens."
 ---

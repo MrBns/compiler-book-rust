@@ -1,5 +1,4 @@
 ---
-layout: ../../layouts/DocLayout.astro
 title: "Semantic Analysis"
 description: "Check user code for logical errors like using undefined variables."
 ---

@@ -1,5 +1,4 @@
 ---
-layout: ../../layouts/DocLayout.astro
 title: "Generating TypeScript"
 description: "Write the full code generator that walks the AST and produces TypeScript code."
 ---

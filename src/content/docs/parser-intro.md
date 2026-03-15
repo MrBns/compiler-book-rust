@@ -1,5 +1,4 @@
 ---
-layout: ../../layouts/DocLayout.astro
 title: "What is Parsing?"
 description: "Understand how a parser turns tokens into an Abstract Syntax Tree (AST)."
 ---

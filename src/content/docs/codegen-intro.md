@@ -1,5 +1,4 @@
 ---
-layout: ../../layouts/DocLayout.astro
 title: "Code Generation Intro"
 description: "Learn the strategy for generating TypeScript from an AST."
 ---

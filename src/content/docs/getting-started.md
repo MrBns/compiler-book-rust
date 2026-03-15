@@ -1,5 +1,4 @@
 ---
-layout: ../../layouts/DocLayout.astro
 title: "Getting Started"
 description: "Set up your Rust project and learn how to use this book."
 ---

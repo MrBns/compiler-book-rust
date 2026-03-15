@@ -1,5 +1,4 @@
 ---
-layout: ../../layouts/DocLayout.astro
 title: "Our Project Plan"
 description: "Design the Pico language we will compile and set up our Rust project files."
 ---

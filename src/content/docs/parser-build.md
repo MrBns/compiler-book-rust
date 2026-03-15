@@ -1,5 +1,4 @@
 ---
-layout: ../../layouts/DocLayout.astro
 title: "Building the Parser"
 description: "Build the parser that turns tokens into an AST using recursive descent."
 ---

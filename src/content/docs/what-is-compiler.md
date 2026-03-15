@@ -1,5 +1,4 @@
 ---
-layout: ../../layouts/DocLayout.astro
 title: "What is a Compiler?"
 description: "Understand what a compiler does, and the four main phases it goes through."
 ---
