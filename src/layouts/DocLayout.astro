@@ -1,0 +1,172 @@
+---
+// DocLayout.astro — The main layout for book pages
+// Works with both .astro pages and .md pages.
+// When used with .md, Astro passes: frontmatter, headings
+
+import "../styles/global.css";
+import { navGroups, allPages, type NavItem } from "../nav";
+
+interface Props {
+  // Used by .astro pages directly
+  title?: string;
+  description?: string;
+  headings?: { depth: number; text: string; slug: string }[];
+  // Used by .md pages (Astro passes these automatically)
+  frontmatter?: {
+    title?: string;
+    description?: string;
+  };
+}
+
+const { frontmatter, headings = [] } = Astro.props;
+const title = Astro.props.title ?? frontmatter?.title ?? "Book";
+const description = Astro.props.description ?? frontmatter?.description ?? "";
+
+const currentPath = Astro.url.pathname.replace(/\/$/, "");
+
+const currentIndex = allPages.findIndex((p) => p.href === currentPath);
+const prevPage: NavItem | undefined = currentIndex > 0 ? allPages[currentIndex - 1] : undefined;
+const nextPage: NavItem | undefined =
+  currentIndex < allPages.length - 1 ? allPages[currentIndex + 1] : undefined;
+
+const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <title>{title} | Compiler in Rust</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  </head>
+  <body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+      <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle menu">☰</button>
+      <a href="/" class="navbar__logo">Compiler<span>Book</span> 🦀</a>
+      <nav class="navbar__nav">
+        <a href="/docs/getting-started">Guide</a>
+        <a href="https://github.com/MrBns/compiler-book-rust" target="_blank">GitHub</a>
+      </nav>
+      <div class="navbar__right">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+          <span id="themeIcon">🌙</span>
+          <span id="themeLabel">Dark</span>
+        </button>
+      </div>
+    </nav>
+
+    <div class="layout">
+      <!-- SIDEBAR -->
+      <aside class="sidebar" id="sidebar">
+        {navGroups.map((group) => (
+          <div class="sidebar__group">
+            <span class="sidebar__group-title">{group.title}</span>
+            {group.items.map((item) => (
+              <a
+                href={item.href}
+                class={`sidebar__link${item.href === currentPath ? " active" : ""}`}
+              >
+                {item.title}
+              </a>
+            ))}
+          </div>
+        ))}
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <main class="main">
+        <article class="content">
+          <slot />
+
+          <!-- Prev / Next navigation -->
+          <nav class="page-nav">
+            {prevPage ? (
+              <a href={prevPage.href} class="page-nav__btn">
+                <span class="page-nav__label">← Previous</span>
+                <span class="page-nav__title">{prevPage.title}</span>
+              </a>
+            ) : <div />}
+            {nextPage ? (
+              <a href={nextPage.href} class="page-nav__btn page-nav__btn--next">
+                <span class="page-nav__label">Next →</span>
+                <span class="page-nav__title">{nextPage.title}</span>
+              </a>
+            ) : <div />}
+          </nav>
+        </article>
+      </main>
+
+      <!-- RIGHT TOC -->
+      {tocHeadings.length > 0 && (
+        <aside class="toc">
+          <p class="toc__title">≡ On This Page</p>
+          <ul class="toc__list">
+            {tocHeadings.map((h) => (
+              <li class={h.depth === 3 ? "h3" : ""}>
+                <a href={`#${h.slug}`}>{h.text}</a>
+              </li>
+            ))}
+          </ul>
+        </aside>
+      )}
+    </div>
+
+    <script>
+      const html = document.documentElement;
+      const toggleBtn = document.getElementById("themeToggle");
+      const themeIcon = document.getElementById("themeIcon");
+      const themeLabel = document.getElementById("themeLabel");
+
+      const saved = localStorage.getItem("theme");
+      if (saved === "dark" || (!saved && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+        html.setAttribute("data-theme", "dark");
+        if (themeIcon) themeIcon.textContent = "☀️";
+        if (themeLabel) themeLabel.textContent = "Light";
+      }
+
+      toggleBtn?.addEventListener("click", () => {
+        const isDark = html.getAttribute("data-theme") === "dark";
+        html.setAttribute("data-theme", isDark ? "light" : "dark");
+        localStorage.setItem("theme", isDark ? "light" : "dark");
+        if (themeIcon) themeIcon.textContent = isDark ? "🌙" : "☀️";
+        if (themeLabel) themeLabel.textContent = isDark ? "Dark" : "Light";
+      });
+
+      const sidebar = document.getElementById("sidebar");
+      const sidebarToggle = document.getElementById("sidebarToggle");
+      sidebarToggle?.addEventListener("click", () => {
+        sidebar?.classList.toggle("open");
+      });
+      document.addEventListener("click", (e) => {
+        if (sidebar?.classList.contains("open")) {
+          if (!sidebar.contains(e.target as Node) && e.target !== sidebarToggle) {
+            sidebar.classList.remove("open");
+          }
+        }
+      });
+
+      const tocLinks = document.querySelectorAll<HTMLAnchorElement>(".toc__list a");
+      if (tocLinks.length > 0) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                tocLinks.forEach((l) => l.classList.remove("active"));
+                const id = entry.target.id;
+                const link = document.querySelector<HTMLAnchorElement>(`.toc__list a[href="#${id}"]`);
+                link?.classList.add("active");
+              }
+            });
+          },
+          { rootMargin: "-80px 0px -70% 0px" }
+        );
+        document.querySelectorAll("h2[id], h3[id]").forEach((h) => observer.observe(h));
+      }
+    </script>
+  </body>
+</html>
