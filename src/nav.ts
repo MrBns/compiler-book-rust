@@ -18,6 +18,8 @@ export const navGroups: NavGroup[] = [
       { title: "Getting Started", href: "/docs/getting-started" },
       { title: "What is a Compiler?", href: "/docs/what-is-compiler" },
       { title: "Our Project Plan", href: "/docs/project-plan" },
+      { title: "Types & Type Safety", href: "/docs/types-safety" },
+      { title: "Structs & Properties", href: "/docs/struct" },
     ],
   },
   {

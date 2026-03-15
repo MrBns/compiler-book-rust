@@ -327,6 +327,67 @@ a:hover { color: var(--c-brand-light); text-decoration: underline; }
 [data-theme="dark"] .callout.warn { background: #2a2000; }
 [data-theme="dark"] .callout.warn .callout__title { color: #fcd34d; }
 
+/* ---------- Tables ---------- */
+/*
+ * Markdown tables rendered by Astro are bare <table> elements.
+ * We style them here to look beautiful in both light and dark mode.
+ * Using display:block + overflow-x:auto makes them scroll on small screens.
+ */
+.content table {
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+  border-collapse: collapse;
+  margin: 28px 0;
+  font-size: 0.875rem;
+  border: 1px solid var(--c-border);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+.content thead tr {
+  background: var(--c-bg-soft);
+}
+
+.content th {
+  padding: 11px 18px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--c-text-3);
+  border-bottom: 2px solid var(--c-border);
+  white-space: nowrap;
+}
+
+.content td {
+  padding: 11px 18px;
+  border-bottom: 1px solid var(--c-border);
+  color: var(--c-text-2);
+  vertical-align: middle;
+  line-height: 1.65;
+}
+
+.content tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.content tbody tr:nth-child(even) {
+  background: var(--c-bg-soft);
+}
+
+.content tbody tr:hover {
+  background: var(--c-tip-bg);
+  transition: background var(--transition);
+}
+
+[data-theme="dark"] .content table {
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+
 /* ---------- Table of Contents (right) ---------- */
 .toc {
   position: fixed;

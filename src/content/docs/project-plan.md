@@ -16,10 +16,10 @@ Here is a complete Pico program that shows all features:
 ```
 // This is a comment in Pico
 
-// Declare variables
-let name = "Alice";
-let age  = 25;
-let pi   = 3.14;
+// Declare variables with type annotations
+let name: str   = "Alice";
+let age:  int   = 25;
+let pi:   float = 3.14;
 
 // If / else
 if age > 18 {
@@ -28,17 +28,27 @@ if age > 18 {
     print("Not adult");
 }
 
-// Function definition
-fn add(a, b) {
+// Struct definition
+struct Person {
+    name: str,
+    age:  int,
+}
+
+// Create a struct instance
+let p: Person = Person { name: "Bob", age: 30 };
+print(p.name);
+
+// Function definition with typed parameters and return type
+fn add(a: int, b: int): int {
     return a + b;
 }
 
 // Function call
-let result = add(10, 20);
+let result: int = add(10, 20);
 print(result);
 ```
 
-Simple and clean. Very similar to JavaScript.
+Simple, clean, and **type-safe**. Variables and functions carry their types so the compiler can catch mistakes.
 
 ## Language Features
 
@@ -46,13 +56,17 @@ Here is a list of everything Pico can do:
 
 | Feature | Example |
 |---|---|
-| Variable | `let x = 5;` |
-| String | `let s = "hello";` |
-| Boolean | `let ok = true;` |
+| Typed variable | `let x: int = 5;` |
+| String | `let s: str = "hello";` |
+| Boolean | `let ok: bool = true;` |
+| Float | `let pi: float = 3.14;` |
 | Arithmetic | `x + y`, `x * y`, `x - y`, `x / y` |
 | Comparison | `x > y`, `x == y`, `x != y` |
 | If/else | `if cond { ... } else { ... }` |
-| Function | `fn name(a, b) { return a + b; }` |
+| Typed function | `fn add(a: int, b: int): int { return a + b; }` |
+| Struct | `struct Point { x: float, y: float }` |
+| Struct instance | `let p: Point = Point { x: 1.0, y: 2.0 };` |
+| Property access | `p.x` |
 | Print | `print(value);` |
 | Comments | `// this is ignored` |
 
@@ -134,6 +148,13 @@ pub enum TokenKind {
     If,     // 'if'
     Else,   // 'else'
     Print,  // 'print'
+    Struct, // 'struct'
+
+    // --- Type keywords ---
+    TyInt,   // 'int'
+    TyFloat, // 'float'
+    TyStr,   // 'str'
+    TyBool,  // 'bool'
 
     // --- Operators ---
     Plus,    // +
@@ -155,6 +176,8 @@ pub enum TokenKind {
     RBrace,    // }
     Comma,     // ,
     Semicolon, // ;
+    Colon,     // :   ← used for type annotations: let x: int
+    Dot,       // .   ← used for property access: p.name
 
     // --- Special ---
     Eof, // End of file — the last token we produce
