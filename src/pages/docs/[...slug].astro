@@ -1,0 +1,48 @@
+---
+// src/pages/docs/[...slug].astro
+//
+// Dynamic route for all book chapters.
+// This replaces the old approach of having individual .md files in src/pages/docs/.
+//
+// HOW IT WORKS:
+//   1. getStaticPaths() asks Astro's content collection for every entry in "docs"
+//   2. Astro pre-renders a static HTML page for each entry at build time
+//   3. render() converts the markdown content into a <Content /> component + headings
+//   4. We pass everything to DocLayout and render the page
+
+import { getCollection, render } from "astro:content";
+import DocLayout from "../../layouts/DocLayout.astro";
+
+// getStaticPaths — called once at build time.
+// Returns one path object per markdown file in src/content/docs/.
+export async function getStaticPaths() {
+  // getCollection("docs") loads all entries from the "docs" collection
+  // (i.e., all files matching the glob in src/content/config.ts)
+  const entries = await getCollection("docs");
+
+  return entries.map((entry) => ({
+    // The slug becomes the URL path.
+    // e.g., "getting-started" → /docs/getting-started
+    params: { slug: entry.id },
+    // Pass the full entry to the page props
+    props: { entry },
+  }));
+}
+
+// Destructure the entry from props (set by getStaticPaths above)
+const { entry } = Astro.props;
+
+// render() converts the markdown content to:
+//   - Content:  an Astro component that renders the HTML
+//   - headings: array of { depth, slug, text } — used by the right-side TOC
+const { Content, headings } = await render(entry);
+---
+
+<DocLayout
+  title={entry.data.title}
+  description={entry.data.description ?? ""}
+  headings={headings}
+>
+  <!-- Content is the compiled markdown rendered as HTML -->
+  <Content />
+</DocLayout>

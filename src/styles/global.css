@@ -1,0 +1,639 @@
+/* ============================================================
+   Global CSS — Vite-docs inspired design
+   Fonts: Inter (body), JetBrains Mono (code)
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* ---------- CSS Variables ---------- */
+:root {
+  --font-body: 'Inter', sans-serif;
+  --font-code: 'JetBrains Mono', monospace;
+
+  /* colors – light mode */
+  --c-bg:          #ffffff;
+  --c-bg-soft:     #f6f6f7;
+  --c-bg-mute:     #eeeeee;
+  --c-border:      #e2e2e3;
+  --c-text:        #1b1b1f;
+  --c-text-2:      #3c3c43;
+  --c-text-3:      #6b6b77;
+  --c-brand:       #646cff;
+  --c-brand-light: #747bff;
+  --c-brand-dark:  #535bf2;
+  --c-tip-bg:      #f3f0ff;
+  --c-tip-border:  #9b8aff;
+  --c-warn-bg:     #fff8e1;
+  --c-warn-border: #ffca28;
+  --c-code-bg:     #1e1e2e;
+  --c-code-text:   #cdd6f4;
+
+  /* layout */
+  --sidebar-width:   272px;
+  --toc-width:       220px;
+  --nav-height:      64px;
+  --content-max:     860px;
+  --layout-max:      1920px;
+  --transition:      0.2s ease;
+}
+
+/* ---------- Dark mode ---------- */
+[data-theme="dark"] {
+  --c-bg:          #1b1b1f;
+  --c-bg-soft:     #252529;
+  --c-bg-mute:     #2e2e32;
+  --c-border:      #3c3c43;
+  --c-text:        #e6e6ef;
+  --c-text-2:      #c5c5ce;
+  --c-text-3:      #8b8b99;
+  --c-brand:       #747bff;
+  --c-brand-light: #848bff;
+  --c-brand-dark:  #535bf2;
+  --c-tip-bg:      #1e1b38;
+  --c-tip-border:  #6b63ff;
+  --c-code-bg:     #161622;
+}
+
+/* ---------- Reset & Base ---------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: var(--c-text);
+  background: var(--c-bg);
+  scroll-behavior: smooth;
+  transition: background var(--transition), color var(--transition);
+}
+
+body { min-height: 100vh; }
+
+a { color: var(--c-brand); text-decoration: none; }
+a:hover { color: var(--c-brand-light); text-decoration: underline; }
+
+/* ---------- Navbar ---------- */
+.navbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--nav-height);
+  background: var(--c-bg);
+  border-bottom: 1px solid var(--c-border);
+  z-index: 100;
+  backdrop-filter: blur(8px);
+}
+
+/* Inner wrapper: centers navbar content within the 1920px max-width */
+.navbar__inner {
+  max-width: var(--layout-max);
+  margin: 0 auto;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 32px;
+}
+
+.navbar__logo {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--c-text);
+  letter-spacing: -0.3px;
+  white-space: nowrap;
+}
+.navbar__logo span { color: var(--c-brand); }
+
+.navbar__nav { display: flex; gap: 24px; }
+.navbar__nav a {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--c-text-2);
+  transition: color var(--transition);
+}
+.navbar__nav a:hover,
+.navbar__nav a.active { color: var(--c-brand); text-decoration: none; }
+
+.navbar__right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+
+/* theme toggle button */
+.theme-toggle {
+  background: var(--c-bg-soft);
+  border: 1px solid var(--c-border);
+  border-radius: 20px;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  color: var(--c-text-2);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: background var(--transition), color var(--transition);
+}
+.theme-toggle:hover { background: var(--c-bg-mute); }
+
+/* ---------- Three-way theme switcher (Light / Dark / Device) ---------- */
+/*
+ * A segmented pill with three options.  The active segment is highlighted.
+ * JS adds data-theme-mode="light|dark|device" to <html> which we use
+ * as the active marker via the [data-active] attribute on each button.
+ */
+.theme-switcher {
+  display: flex;
+  align-items: center;
+  background: var(--c-bg-soft);
+  border: 1px solid var(--c-border);
+  border-radius: 20px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.theme-switcher__btn {
+  background: transparent;
+  border: none;
+  border-radius: 16px;
+  padding: 3px 10px;
+  cursor: pointer;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--c-text-3);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  transition: background var(--transition), color var(--transition);
+  line-height: 1.4;
+}
+.theme-switcher__btn:hover {
+  color: var(--c-text);
+  background: var(--c-bg-mute);
+}
+.theme-switcher__btn[data-active="true"] {
+  background: var(--c-bg-mute);
+  color: var(--c-brand);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+/* ---------- Layout wrapper ---------- */
+/*
+ * The entire [sidebar][content][toc] group is capped at --layout-max
+ * and centered with margin: 0 auto. align-items: flex-start is required
+ * so that sticky children (sidebar, toc) work correctly.
+ */
+.layout {
+  display: flex;
+  align-items: flex-start;
+  max-width: var(--layout-max);
+  margin: 0 auto;
+  width: 100%;
+  padding-top: var(--nav-height);
+  min-height: 100vh;
+}
+
+/* ---------- Sidebar ---------- */
+/*
+ * Changed from position:fixed to position:sticky so it participates in the
+ * flex layout and respects the centered max-width container.
+ * On mobile (≤768px) it reverts back to position:fixed for the overlay effect.
+ */
+.sidebar {
+  position: sticky;
+  top: var(--nav-height);
+  height: calc(100vh - var(--nav-height));
+  overflow-y: auto;
+  flex-shrink: 0;
+  width: var(--sidebar-width);
+  border-right: 1px solid var(--c-border);
+  padding: 24px 0 40px;
+  background: var(--c-bg);
+}
+
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--c-border); border-radius: 4px; }
+
+.sidebar__group { margin-bottom: 24px; }
+
+.sidebar__group-title {
+  display: block;
+  padding: 0 24px 8px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--c-text-3);
+}
+
+.sidebar__link {
+  display: block;
+  padding: 6px 24px;
+  font-size: 0.875rem;
+  color: var(--c-text-2);
+  border-left: 2px solid transparent;
+  transition: color var(--transition), border-color var(--transition), background var(--transition);
+  line-height: 1.5;
+}
+.sidebar__link:hover {
+  color: var(--c-brand);
+  background: var(--c-bg-soft);
+  text-decoration: none;
+}
+.sidebar__link.active {
+  color: var(--c-brand);
+  border-left-color: var(--c-brand);
+  font-weight: 500;
+  background: var(--c-tip-bg);
+}
+
+/* mobile sidebar toggle */
+.sidebar-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--c-text-2);
+  font-size: 1.25rem;
+  padding: 4px;
+}
+
+/* ---------- Main content area ---------- */
+/*
+ * flex:1 + min-width:0 fills the space between sidebar and toc.
+ * The old margin-left/right are removed — sticky siblings handle spacing.
+ */
+.main {
+  flex: 1;
+  min-width: 0;
+  padding: 48px 48px 96px;
+}
+
+.content {
+  max-width: var(--content-max);
+  margin: 0 auto;
+}
+
+/* ---------- Article typography ---------- */
+.content h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  line-height: 1.25;
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--c-border);
+}
+
+.content h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-top: 48px;
+  margin-bottom: 16px;
+  padding-top: 24px;
+  scroll-margin-top: 80px;
+}
+
+.content h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 32px;
+  margin-bottom: 12px;
+  scroll-margin-top: 80px;
+}
+
+.content h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-top: 24px;
+  margin-bottom: 8px;
+}
+
+.content p {
+  line-height: 1.75;
+  color: var(--c-text-2);
+  margin-bottom: 16px;
+}
+
+.content ul, .content ol {
+  padding-left: 24px;
+  margin-bottom: 16px;
+}
+
+.content li {
+  line-height: 1.75;
+  color: var(--c-text-2);
+  margin-bottom: 4px;
+}
+
+.content strong { color: var(--c-text); font-weight: 600; }
+
+.content blockquote {
+  border-left: 3px solid var(--c-brand);
+  padding: 12px 20px;
+  background: var(--c-tip-bg);
+  border-radius: 0 8px 8px 0;
+  margin: 24px 0;
+}
+.content blockquote p { color: var(--c-text-2); margin: 0; }
+
+/* ---------- Code blocks ---------- */
+.content pre {
+  background: var(--c-code-bg);
+  border-radius: 10px;
+  padding: 20px 24px;
+  overflow-x: auto;
+  margin: 24px 0;
+  border: 1px solid rgba(255,255,255,0.06);
+  font-family: var(--font-code);
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+
+.content code {
+  font-family: var(--font-code);
+  font-size: 0.85em;
+}
+
+/* inline code */
+.content p code,
+.content li code,
+.content h2 code,
+.content h3 code,
+.content td code {
+  background: var(--c-bg-mute);
+  border: 1px solid var(--c-border);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 0.82em;
+  color: var(--c-brand-dark);
+}
+[data-theme="dark"] .content p code,
+[data-theme="dark"] .content li code {
+  color: var(--c-brand-light);
+  background: var(--c-bg-mute);
+}
+
+/* ---------- Callout / tip boxes ---------- */
+.callout {
+  border: 1px solid var(--c-tip-border);
+  background: var(--c-tip-bg);
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin: 24px 0;
+  font-size: 0.9rem;
+}
+.callout__title {
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: var(--c-brand);
+}
+.callout p { color: var(--c-text-2); margin: 0; line-height: 1.6; }
+
+.callout.warn {
+  border-color: var(--c-warn-border);
+  background: var(--c-warn-bg);
+}
+.callout.warn .callout__title { color: #b45309; }
+[data-theme="dark"] .callout.warn { background: #2a2000; }
+[data-theme="dark"] .callout.warn .callout__title { color: #fcd34d; }
+
+/* ---------- Tables ---------- */
+/*
+ * Markdown tables rendered by Astro are bare <table> elements.
+ * We style them here to look beautiful in both light and dark mode.
+ * Using display:block + overflow-x:auto makes them scroll on small screens.
+ */
+.content table {
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+  border-collapse: collapse;
+  margin: 28px 0;
+  font-size: 0.875rem;
+  border: 1px solid var(--c-border);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+.content thead tr {
+  background: var(--c-bg-soft);
+}
+
+.content th {
+  padding: 11px 18px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--c-text-3);
+  border-bottom: 2px solid var(--c-border);
+  white-space: nowrap;
+}
+
+.content td {
+  padding: 11px 18px;
+  border-bottom: 1px solid var(--c-border);
+  color: var(--c-text-2);
+  vertical-align: middle;
+  line-height: 1.65;
+}
+
+.content tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.content tbody tr:nth-child(even) {
+  background: var(--c-bg-soft);
+}
+
+.content tbody tr:hover {
+  background: var(--c-tip-bg);
+  transition: background var(--transition);
+}
+
+[data-theme="dark"] .content table {
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+
+/* ---------- Table of Contents (right) ---------- */
+/*
+ * Changed from position:fixed to position:sticky — same reasoning as sidebar.
+ */
+.toc {
+  position: sticky;
+  top: var(--nav-height);
+  height: calc(100vh - var(--nav-height));
+  overflow-y: auto;
+  flex-shrink: 0;
+  width: var(--toc-width);
+  padding: 32px 20px 40px;
+  font-size: 0.78rem;
+}
+
+.toc__title {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--c-text-3);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.toc__list { list-style: none; }
+.toc__list li { margin-bottom: 4px; }
+
+.toc__list a {
+  color: var(--c-text-3);
+  transition: color var(--transition);
+  display: block;
+  padding: 2px 0;
+  line-height: 1.5;
+}
+.toc__list a:hover,
+.toc__list a.active { color: var(--c-brand); text-decoration: none; }
+
+.toc__list li.h3 { padding-left: 12px; }
+
+/* ---------- Page nav (prev / next) ---------- */
+.page-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 64px;
+  padding-top: 32px;
+  border-top: 1px solid var(--c-border);
+}
+
+.page-nav__btn {
+  display: flex;
+  flex-direction: column;
+  padding: 16px 20px;
+  border: 1px solid var(--c-border);
+  border-radius: 8px;
+  flex: 1;
+  max-width: 280px;
+  transition: border-color var(--transition), background var(--transition);
+  color: var(--c-text);
+}
+.page-nav__btn:hover { border-color: var(--c-brand); background: var(--c-tip-bg); text-decoration: none; }
+.page-nav__btn--next { align-items: flex-end; }
+.page-nav__label { font-size: 0.72rem; color: var(--c-text-3); margin-bottom: 4px; }
+.page-nav__title { font-size: 0.9rem; font-weight: 600; color: var(--c-brand); }
+
+/* ---------- Hero (index page) ---------- */
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 80px 24px 60px;
+}
+.hero__badge {
+  background: var(--c-tip-bg);
+  border: 1px solid var(--c-tip-border);
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-size: 0.8rem;
+  color: var(--c-brand);
+  margin-bottom: 24px;
+}
+.hero__title {
+  font-size: 3rem;
+  font-weight: 700;
+  letter-spacing: -1px;
+  line-height: 1.15;
+  margin-bottom: 20px;
+}
+.hero__title span { color: var(--c-brand); }
+.hero__subtitle {
+  font-size: 1.1rem;
+  color: var(--c-text-2);
+  max-width: 540px;
+  line-height: 1.7;
+  margin-bottom: 36px;
+}
+.hero__cta { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+
+.btn {
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn--primary {
+  background: var(--c-brand);
+  color: #fff;
+  border: 1px solid transparent;
+}
+.btn--primary:hover { background: var(--c-brand-dark); text-decoration: none; color: #fff; }
+.btn--outline {
+  background: transparent;
+  color: var(--c-brand);
+  border: 1px solid var(--c-brand);
+}
+.btn--outline:hover { background: var(--c-tip-bg); text-decoration: none; }
+
+/* ---------- Chapter cards ---------- */
+.chapter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  padding: 40px 24px 80px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.chapter-card {
+  border: 1px solid var(--c-border);
+  border-radius: 10px;
+  padding: 20px 24px;
+  transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition);
+  color: var(--c-text);
+  background: var(--c-bg);
+}
+.chapter-card:hover {
+  border-color: var(--c-brand);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(100,108,255,0.12);
+  text-decoration: none;
+}
+.chapter-card__num {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--c-brand);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+.chapter-card__title { font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
+.chapter-card__desc { font-size: 0.85rem; color: var(--c-text-3); line-height: 1.6; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1200px) {
+  .toc { display: none; }
+}
+
+@media (max-width: 768px) {
+  /* On mobile the sidebar becomes a fixed overlay again */
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: var(--nav-height);
+    transform: translateX(-100%);
+    transition: transform var(--transition);
+    z-index: 50;
+  }
+  .sidebar.open { transform: translateX(0); }
+  .main { padding: 32px 20px 80px; }
+  .sidebar-toggle { display: flex; }
+  .hero__title { font-size: 2rem; }
+  .page-nav { flex-direction: column; }
+  .page-nav__btn { max-width: 100%; }
+}

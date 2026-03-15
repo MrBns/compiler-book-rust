@@ -1,0 +1,95 @@
+---
+// Home page — Introduction to the book
+import "../styles/global.css";
+
+const chapters = [
+  { num: "Chapter 0", title: "Getting Started", href: "/docs/getting-started", desc: "Set up your Rust project and understand what we will build." },
+  { num: "Chapter 1", title: "What is a Compiler?", href: "/docs/what-is-compiler", desc: "Learn the big picture. What does a compiler do, step by step?" },
+  { num: "Chapter 2", title: "Our Project Plan", href: "/docs/project-plan", desc: "Design the language we will compile and pick TypeScript as our target." },
+  { num: "Chapter 3", title: "Building the Lexer", href: "/docs/lexer-build", desc: "Turn raw source code text into a list of tokens using Rust." },
+  { num: "Chapter 4", title: "Building the Parser", href: "/docs/parser-build", desc: "Turn tokens into a tree structure called an AST." },
+  { num: "Chapter 5", title: "Semantic Analysis", href: "/docs/semantic", desc: "Check for mistakes in the code before we generate output." },
+  { num: "Chapter 6", title: "Generating TypeScript", href: "/docs/codegen-typescript", desc: "Walk the AST and produce working TypeScript code." },
+  { num: "Chapter 7", title: "Putting It All Together", href: "/docs/putting-together", desc: "Connect all pieces and run our compiler end-to-end." },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Compiler in Rust — Book</title>
+    <meta name="description" content="Learn how to build a compiler in Rust. Easy English, lots of code examples." />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <a href="/" class="navbar__logo">Compiler<span>Book</span> 🦀</a>
+      <nav class="navbar__nav">
+        <a href="/docs/getting-started">Guide</a>
+        <a href="https://github.com/MrBns/compiler-book-rust" target="_blank">GitHub</a>
+      </nav>
+      <div class="navbar__right">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+          <span id="themeIcon">🌙</span>
+          <span id="themeLabel">Dark</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Hero section -->
+    <section class="hero" style="margin-top: var(--nav-height)">
+      <div class="hero__badge">🦀 Written for Beginners</div>
+      <h1 class="hero__title">
+        Making a<br /><span>Compiler</span> in Rust
+      </h1>
+      <p class="hero__subtitle">
+        A beginner-friendly book. You will learn how to build a real compiler in Rust —
+        step by step — that turns your own language into TypeScript.
+        Easy English, lots of code, lots of comments.
+      </p>
+      <div class="hero__cta">
+        <a href="/docs/getting-started" class="btn btn--primary">📖 Start Reading</a>
+        <a href="https://github.com/MrBns/compiler-book-rust" class="btn btn--outline" target="_blank">⭐ GitHub</a>
+      </div>
+    </section>
+
+    <!-- Chapter cards -->
+    <div class="chapter-grid">
+      {chapters.map((c) => (
+        <a href={c.href} class="chapter-card">
+          <div class="chapter-card__num">{c.num}</div>
+          <div class="chapter-card__title">{c.title}</div>
+          <div class="chapter-card__desc">{c.desc}</div>
+        </a>
+      ))}
+    </div>
+
+    <script>
+      const html = document.documentElement;
+      const toggleBtn = document.getElementById("themeToggle");
+      const themeIcon = document.getElementById("themeIcon");
+      const themeLabel = document.getElementById("themeLabel");
+
+      const saved = localStorage.getItem("theme");
+      if (saved === "dark" || (!saved && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+        html.setAttribute("data-theme", "dark");
+        if (themeIcon) themeIcon.textContent = "☀️";
+        if (themeLabel) themeLabel.textContent = "Light";
+      }
+
+      toggleBtn?.addEventListener("click", () => {
+        const isDark = html.getAttribute("data-theme") === "dark";
+        html.setAttribute("data-theme", isDark ? "light" : "dark");
+        localStorage.setItem("theme", isDark ? "light" : "dark");
+        if (themeIcon) themeIcon.textContent = isDark ? "🌙" : "☀️";
+        if (themeLabel) themeLabel.textContent = isDark ? "Dark" : "Light";
+      });
+    </script>
+  </body>
+</html>
+
