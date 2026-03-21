@@ -3,8 +3,6 @@ title: "Building the Parser"
 description: "Build the parser that turns tokens into an AST using recursive descent."
 ---
 
-# Building the Parser
-
 Now let's build the parser! We will first define the AST types, then write the parser itself.
 
 ## Define the AST Types

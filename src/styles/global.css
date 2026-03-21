@@ -417,7 +417,6 @@ a:hover { color: var(--c-brand-light); text-decoration: underline; }
  * Using display:block + overflow-x:auto makes them scroll on small screens.
  */
 .content table {
-  display: block;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   width: 100%;
@@ -452,7 +451,10 @@ a:hover { color: var(--c-brand-light); text-decoration: underline; }
   color: var(--c-text-2);
   vertical-align: middle;
   line-height: 1.65;
+  
 }
+
+
 
 .content tbody tr:last-child td {
   border-bottom: none;

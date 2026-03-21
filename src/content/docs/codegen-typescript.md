@@ -3,8 +3,6 @@ title: "Generating TypeScript"
 description: "Write the full code generator that walks the AST and produces TypeScript code."
 ---
 
-# Generating TypeScript
-
 Time to write the code generator! Open `src/codegen.rs`.
 
 ## The CodeGen Struct
@@ -270,7 +268,7 @@ cargo test
 
 Create a test file `example.pico`:
 
-```
+```txt
 fn greet(name) {
     print(name);
 }

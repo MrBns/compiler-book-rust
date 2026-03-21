@@ -3,8 +3,6 @@ title: "Putting It All Together"
 description: "Connect all compiler phases and run your first complete compilation."
 ---
 
-# Putting It All Together
-
 We have built all four phases of our Pico compiler:
 
 1. ✅ **Lexer** — turns text into tokens
@@ -113,7 +111,7 @@ cargo build
 
 Create a test file `hello.pico`:
 
-```
+```txt
 fn add(a, b) {
     return a + b;
 }
@@ -139,7 +137,7 @@ cargo run -- hello.pico
 
 You should see:
 
-```
+```txt
 Compiling: hello.pico
   Lexed 47 tokens
   Parsed 5 top-level statements
@@ -178,7 +176,7 @@ npx ts-node hello.ts
 
 Output:
 
-```
+```txt
 Big result!
 42
 ```
@@ -189,7 +187,7 @@ Big result!
 
 Look at what we created from scratch in Rust:
 
-```
+```txt
 hello.pico
     (Lexer)    -> tokens
     (Parser)   -> AST
@@ -203,7 +201,7 @@ A real working compiler, written entirely in Rust!
 Summary of all files:
 
 | File | Purpose |
-|---|---|
+| --- | --- |
 | `src/token.rs` | Token type definitions |
 | `src/lexer.rs` | Turns text into tokens |
 | `src/ast.rs` | AST node types |
@@ -217,25 +215,29 @@ Summary of all files:
 Our Pico compiler is small on purpose. Here are ideas to make it bigger:
 
 **Easy additions:**
+
 - `while` loops — `while condition { ... }`
 - Unary minus — `-x`
 - Better error messages with line numbers
 
 **Medium additions:**
+
 - Arrays — `let arr = [1, 2, 3];`
 - String operations — `len(s)`, string concatenation
 - Multiple return values
 
 **Hard additions:**
+
 - Type checking — catch `"hello" + 5` as an error
 - Import/export statements
 - Generate Go code instead of TypeScript!
 
-## Congratulations!
+## Congratulations
 
 You did it! You built a **real compiler** in **Rust**.
 
 Most programmers never build a compiler. You now understand:
+
 - What tokens, AST, and code generation are
 - How to write a lexer, parser, and semantic checker in Rust
 - How recursive descent parsing works

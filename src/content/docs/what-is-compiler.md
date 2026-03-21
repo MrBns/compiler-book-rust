@@ -3,13 +3,12 @@ title: "What is a Compiler?"
 description: "Understand what a compiler does, and the four main phases it goes through."
 ---
 
-# What is a Compiler?
-
 A **compiler** is a program that reads code written in one language and turns it into code in another language.
 
 Think about it like a **translator**. A human translator reads a book written in Bengali and writes the same book in English. A compiler does the same thing — but for programming languages.
 
 For example:
+
 - The **Rust compiler** reads Rust code and turns it into machine code.
 - The **TypeScript compiler** reads TypeScript code and turns it into JavaScript.
 - Our **Pico compiler** will read Pico code and turn it into TypeScript.
@@ -18,7 +17,7 @@ For example:
 
 Here is the simple idea:
 
-```
+```txt
 Your Code (text)  →  [Compiler]  →  New Code (text or machine code)
 ```
 
@@ -30,7 +29,7 @@ But how? Let's look inside the compiler.
 
 A compiler does not do everything in one step. It has **phases** — like stages in a factory.
 
-```
+```txt
 Source Code
     ↓
 [Phase 1: Lexer]      → List of Tokens
@@ -52,7 +51,7 @@ A token is a small meaningful piece of code.
 
 Example:
 
-```
+```txt
 Source code:   let x = 10 + 20;
                ↓
 Tokens:        [Let] [Ident("x")] [Equals] [Number(10)] [Plus] [Number(20)] [Semicolon]
@@ -66,7 +65,7 @@ The **parser** takes the list of tokens and builds a **tree** — called the **A
 
 The tree shows the structure and relationships between tokens.
 
-```
+```txt
 let x = 10 + 20;
         ↓
    LetStatement
@@ -85,7 +84,7 @@ Now we can see that `10 + 20` is the *value* being assigned to `x`.
 
 For example:
 
-```
+```txt
 let x = 10;
 let y = x + z;  -- ERROR! 'z' is never defined!
 ```
@@ -109,7 +108,7 @@ For our compiler, it will write TypeScript:
 You might hear the word **interpreter** too. What is the difference?
 
 | | Compiler | Interpreter |
-|---|---|---|
+| --- | --- | --- |
 | What it does | Translates all code first, then runs | Reads and runs code line by line |
 | Speed | Faster at runtime | Slower at runtime |
 | Examples | Rust compiler, GCC | Python, Ruby |

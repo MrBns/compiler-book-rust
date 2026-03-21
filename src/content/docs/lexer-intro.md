@@ -3,8 +3,6 @@ title: "What is a Lexer?"
 description: "Understand how a lexer works before we build one."
 ---
 
-# What is a Lexer?
-
 The **lexer** is the first part of our compiler. It is also called a **tokenizer** or **scanner**.
 
 Its job is simple: read the source code text character by character, and group those characters into **tokens**.
@@ -17,13 +15,13 @@ The lexer does the same thing for code. It reads the source text and produces a 
 
 **Input to the lexer:**
 
-```
+```txt
 let x = 10 + 20;
 ```
 
 **Output from the lexer:**
 
-```
+```rust
 Token { kind: Let,          span: (line=1, col=1) }
 Token { kind: Ident("x"),   span: (line=1, col=5) }
 Token { kind: Equals,       span: (line=1, col=7) }
@@ -40,7 +38,7 @@ The lexer does **not** care about meaning. It does not know that `10 + 20` is an
 
 Here is the basic algorithm:
 
-```
+```txt
 1. Look at the current character
 2. Decide what kind of token it starts
 3. Read more characters if needed (e.g., for "==")
@@ -54,7 +52,7 @@ Let's look at some examples:
 **Single character tokens** — these are easy:
 
 | Character | Token |
-|---|---|
+| --- | --- |
 | `+` | `Plus` |
 | `-` | `Minus` |
 | `*` | `Star` |
@@ -69,7 +67,7 @@ Let's look at some examples:
 **Two character tokens** — we need to peek at the next character:
 
 | Characters | Token |
-|---|---|
+| --- | --- |
 | `==` | `EqEq` |
 | `!=` | `BangEq` |
 | `<=` | `LtEq` |
@@ -78,7 +76,7 @@ Let's look at some examples:
 **Multi-character tokens** — we keep reading until the token ends:
 
 | Pattern | Token |
-|---|---|
+| --- | --- |
 | Digits like `123` or `3.14` | `Number(123.0)` |
 | Letters like `hello` | `Ident("hello")` |
 | Keywords like `let`, `fn` | `Let`, `Fn` |
@@ -103,7 +101,7 @@ It just means: the lexer can be in different **states**, and it changes state ba
 
 For example:
 
-```
+```txt
 State: Start
   → See digit  → go to State: ReadingNumber
   → See letter → go to State: ReadingIdentifier

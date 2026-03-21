@@ -3,8 +3,6 @@ title: "Code Generation Intro"
 description: "Learn the strategy for generating TypeScript from an AST."
 ---
 
-# Code Generation Intro
-
 We are at the last phase of our compiler: **code generation**.
 
 This is the most exciting step! We take the AST (our tree of meaning) and write it out as TypeScript code.
@@ -17,7 +15,7 @@ For us, the target language is **TypeScript**.
 
 Here is the idea in pseudocode:
 
-```
+```txt
 For each AST node:
     If it is a LetStatement → write "const name = value;"
     If it is a Number      → write the number
@@ -66,7 +64,7 @@ Each function returns a `String` containing TypeScript code.
 Here is the translation table from Pico to TypeScript:
 
 | Pico | TypeScript |
-|---|---|
+| --- | --- |
 | `let x = 5;` | `const x = 5;` |
 | `let s = "hi";` | `const s = "hi";` |
 | `print(x);` | `console.log(x);` |
@@ -78,6 +76,7 @@ Here is the translation table from Pico to TypeScript:
 | `x != y` | `x !== y` |
 
 Notice:
+
 - `let` becomes `const` (TypeScript prefers `const` for values that don't change)
 - `print()` becomes `console.log()`
 - `==` becomes `===` (strict equality in TypeScript)

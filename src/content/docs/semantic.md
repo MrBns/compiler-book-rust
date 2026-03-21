@@ -3,8 +3,6 @@ title: "Semantic Analysis"
 description: "Check user code for logical errors like using undefined variables."
 ---
 
-# Semantic Analysis
-
 The lexer checks if tokens are valid. The parser checks if the syntax is correct. But neither of them checks if the code *makes sense*.
 
 That is the job of **semantic analysis**.
@@ -13,7 +11,7 @@ That is the job of **semantic analysis**.
 
 Semantic analysis catches errors that the parser cannot catch. For example:
 
-```
+```txt
 -- ERROR: 'z' is used but never declared
 let x = z + 1;
 ```
@@ -32,7 +30,7 @@ To track which variables and functions exist, we use a **symbol table** — basi
 
 When we enter a new block (`{...}`), we create a new scope. When we leave the block, we destroy that scope.
 
-```
+```txt
 Program scope:
   [add, x, y]       ← functions and variables at the top level
 
