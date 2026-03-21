@@ -50,6 +50,26 @@ const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <!--
+      Anti-flash inline script — must run synchronously before the first paint.
+      It reads the saved theme-mode from localStorage and immediately sets
+      data-theme on <html> so the correct colour tokens are active before any
+      CSS is rendered.  Using is:inline keeps Astro from deferring this script.
+    -->
+    <script is:inline>
+      (function () {
+        try {
+          var mode = localStorage.getItem("theme-mode") || "device";
+          var theme =
+            mode === "dark" ? "dark"
+            : mode === "light" ? "light"
+            : window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light";
+          document.documentElement.setAttribute("data-theme", theme);
+        } catch (_) {}
+      })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
     <title>{title} | Compiler in Rust</title>
