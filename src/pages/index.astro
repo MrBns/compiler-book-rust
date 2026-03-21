@@ -28,16 +28,19 @@ const chapters = [
   <body>
     <!-- Navbar -->
     <nav class="navbar">
-      <a href="/" class="navbar__logo">Compiler<span>Book</span> 🦀</a>
-      <nav class="navbar__nav">
-        <a href="/docs/getting-started">Guide</a>
-        <a href="https://github.com/MrBns/compiler-book-rust" target="_blank">GitHub</a>
-      </nav>
-      <div class="navbar__right">
-        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-          <span id="themeIcon">🌙</span>
-          <span id="themeLabel">Dark</span>
-        </button>
+      <!-- navbar__inner provides the flex row layout (logo | links | theme toggle) -->
+      <div class="navbar__inner">
+        <a href="/" class="navbar__logo">Compiler<span>Book</span> 🦀</a>
+        <nav class="navbar__nav">
+          <a href="/docs/getting-started">Guide</a>
+          <a href="https://github.com/MrBns/compiler-book-rust" target="_blank">GitHub</a>
+        </nav>
+        <div class="navbar__right">
+          <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+            <span id="themeIcon">🌙</span>
+            <span id="themeLabel">Dark</span>
+          </button>
+        </div>
       </div>
     </nav>
 
