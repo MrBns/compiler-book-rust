@@ -115,8 +115,17 @@ a:hover { color: var(--c-brand-light); text-decoration: underline; }
 
 .navbar__right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
 
-/* theme toggle button */
-.theme-toggle {
+/* ---------- Theme dropdown ---------- */
+/*
+ * A dropdown button that shows the current theme (icon + label + chevron).
+ * Clicking opens a small panel with Light / Dark / Device options.
+ * JS adds/removes the .open class on .theme-dropdown to toggle visibility.
+ */
+.theme-dropdown {
+  position: relative;
+}
+
+.theme-dropdown__trigger {
   background: var(--c-bg-soft);
   border: 1px solid var(--c-border);
   border-radius: 20px;
@@ -128,49 +137,56 @@ a:hover { color: var(--c-brand-light); text-decoration: underline; }
   align-items: center;
   gap: 4px;
   transition: background var(--transition), color var(--transition);
+  white-space: nowrap;
 }
-.theme-toggle:hover { background: var(--c-bg-mute); }
+.theme-dropdown__trigger:hover { background: var(--c-bg-mute); }
 
-/* ---------- Three-way theme switcher (Light / Dark / Device) ---------- */
-/*
- * A segmented pill with three options.  The active segment is highlighted.
- * JS adds data-theme-mode="light|dark|device" to <html> which we use
- * as the active marker via the [data-active] attribute on each button.
- */
-.theme-switcher {
-  display: flex;
-  align-items: center;
-  background: var(--c-bg-soft);
+.theme-dropdown__chevron {
+  font-style: normal;
+  font-size: 0.6rem;
+  color: var(--c-text-3);
+  margin-left: 2px;
+  transition: transform var(--transition);
+}
+.theme-dropdown.open .theme-dropdown__chevron { transform: rotate(180deg); }
+
+.theme-dropdown__menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: var(--c-bg);
   border: 1px solid var(--c-border);
-  border-radius: 20px;
-  padding: 3px;
+  border-radius: 10px;
+  padding: 4px;
+  min-width: 140px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  z-index: 200;
+  flex-direction: column;
   gap: 2px;
 }
+.theme-dropdown.open .theme-dropdown__menu { display: flex; }
 
-.theme-switcher__btn {
+.theme-dropdown__item {
   background: transparent;
   border: none;
-  border-radius: 16px;
-  padding: 3px 10px;
+  border-radius: 6px;
+  padding: 7px 12px;
   cursor: pointer;
-  font-size: 0.72rem;
-  font-weight: 500;
-  color: var(--c-text-3);
+  font-size: 0.8rem;
+  color: var(--c-text-2);
+  text-align: left;
   display: flex;
   align-items: center;
-  gap: 4px;
-  white-space: nowrap;
+  gap: 8px;
   transition: background var(--transition), color var(--transition);
-  line-height: 1.4;
+  width: 100%;
 }
-.theme-switcher__btn:hover {
-  color: var(--c-text);
-  background: var(--c-bg-mute);
-}
-.theme-switcher__btn[data-active="true"] {
-  background: var(--c-bg-mute);
-  color: var(--c-brand);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+.theme-dropdown__item:hover { background: var(--c-bg-soft); color: var(--c-text); }
+.theme-dropdown__item.active { color: var(--c-brand); font-weight: 600; background: var(--c-tip-bg); }
+
+[data-theme="dark"] .theme-dropdown__menu {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
 }
 
 /* ---------- Layout wrapper ---------- */

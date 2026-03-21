@@ -69,11 +69,18 @@ const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
           <a href="https://github.com/MrBns/compiler-book-rust" target="_blank">GitHub</a>
         </nav>
         <div class="navbar__right">
-          <!-- Three-way theme switcher: Light / Dark / Device -->
-          <div class="theme-switcher" role="group" aria-label="Color theme">
-            <button class="theme-switcher__btn" data-mode="light" aria-label="Light theme">☀️ Light</button>
-            <button class="theme-switcher__btn" data-mode="dark"  aria-label="Dark theme">🌙 Dark</button>
-            <button class="theme-switcher__btn" data-mode="device" aria-label="Use device theme">💻 Device</button>
+          <!-- Theme dropdown: Light / Dark / Device -->
+          <div class="theme-dropdown" id="themeDropdown">
+            <button class="theme-dropdown__trigger" id="themeDropdownTrigger" aria-haspopup="true" aria-expanded="false" aria-label="Select color theme">
+              <span id="themeDropdownIcon">💻</span>
+              <span id="themeDropdownLabel">Device</span>
+              <span class="theme-dropdown__chevron">▾</span>
+            </button>
+            <div class="theme-dropdown__menu" id="themeDropdownMenu" role="menu">
+              <button class="theme-dropdown__item" data-mode="light"  role="menuitem">☀️ Light</button>
+              <button class="theme-dropdown__item" data-mode="dark"   role="menuitem">🌙 Dark</button>
+              <button class="theme-dropdown__item" data-mode="device" role="menuitem">💻 Device</button>
+            </div>
           </div>
         </div>
       </div>
@@ -137,23 +144,59 @@ const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
 
     <script>
       const html = document.documentElement;
-      const toggleBtn = document.getElementById("themeToggle");
-      const themeIcon = document.getElementById("themeIcon");
-      const themeLabel = document.getElementById("themeLabel");
+      const dropdown = document.getElementById("themeDropdown");
+      const trigger  = document.getElementById("themeDropdownTrigger");
+      const icon     = document.getElementById("themeDropdownIcon");
+      const label    = document.getElementById("themeDropdownLabel");
+      const items    = document.querySelectorAll<HTMLButtonElement>(".theme-dropdown__item");
 
-      const saved = localStorage.getItem("theme");
-      if (saved === "dark" || (!saved && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
-        html.setAttribute("data-theme", "dark");
-        if (themeIcon) themeIcon.textContent = "☀️";
-        if (themeLabel) themeLabel.textContent = "Light";
+      const MODE_META: Record<string, { icon: string; label: string }> = {
+        light:  { icon: "☀️",  label: "Light"  },
+        dark:   { icon: "🌙",  label: "Dark"   },
+        device: { icon: "💻",  label: "Device" },
+      };
+
+      function applyMode(mode: string) {
+        const meta = MODE_META[mode] ?? MODE_META.device;
+        if (mode === "device") {
+          const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+          html.setAttribute("data-theme", prefersDark ? "dark" : "light");
+        } else {
+          html.setAttribute("data-theme", mode);
+        }
+        if (icon)  icon.textContent  = meta.icon;
+        if (label) label.textContent = meta.label;
+        items.forEach((btn) => btn.classList.toggle("active", btn.dataset.mode === mode));
       }
 
-      toggleBtn?.addEventListener("click", () => {
-        const isDark = html.getAttribute("data-theme") === "dark";
-        html.setAttribute("data-theme", isDark ? "light" : "dark");
-        localStorage.setItem("theme", isDark ? "light" : "dark");
-        if (themeIcon) themeIcon.textContent = isDark ? "🌙" : "☀️";
-        if (themeLabel) themeLabel.textContent = isDark ? "Dark" : "Light";
+      // Restore saved preference (default: device)
+      const saved = localStorage.getItem("theme-mode") ?? "device";
+      applyMode(saved);
+
+      // Open / close dropdown
+      trigger?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        dropdown?.classList.toggle("open");
+        trigger.setAttribute("aria-expanded", String(dropdown?.classList.contains("open") ?? false));
+      });
+
+      // Select a mode
+      items.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const mode = btn.dataset.mode ?? "device";
+          localStorage.setItem("theme-mode", mode);
+          applyMode(mode);
+          dropdown?.classList.remove("open");
+          trigger?.setAttribute("aria-expanded", "false");
+        });
+      });
+
+      // Close on outside click
+      document.addEventListener("click", (e) => {
+        if (dropdown?.classList.contains("open") && !dropdown.contains(e.target as Node)) {
+          dropdown.classList.remove("open");
+          trigger?.setAttribute("aria-expanded", "false");
+        }
       });
 
       const sidebar = document.getElementById("sidebar");
