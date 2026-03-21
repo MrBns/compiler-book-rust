@@ -9,6 +9,8 @@ description: "Set up your Rust project and learn how to use this book."
 
 Hello! Welcome to **Compiler Book in Rust** 🦀
 
+> *Book created by **Mr Binary Sniper** · GitHub: [@MrBns](https://github.com/MrBns)*
+
 This book will teach you how to build a real **compiler** from scratch using the **Rust programming language**.
 
 Do not worry if you are new to compilers. We will learn everything step by step.

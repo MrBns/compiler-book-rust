@@ -1,0 +1,11 @@
+[package]
+name = "pico"
+version = "0.1.0"
+edition = "2021"
+description = "The Pico compiler — a toy language that compiles to TypeScript. Built in Rust as a learning project."
+authors = ["Mr Binary Sniper"]
+
+# This is a binary crate (cargo run / cargo build produces an executable)
+[[bin]]
+name = "pico"
+path = "src/main.rs"
