@@ -3,8 +3,6 @@ title: "Building the Lexer"
 description: "Write the lexer in Rust that turns source code text into a list of tokens."
 ---
 
-# Building the Lexer
-
 Now let's write the actual lexer! Open `src/lexer.rs`.
 
 We will build this file step by step.

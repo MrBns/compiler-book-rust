@@ -3,15 +3,13 @@ title: "What is Parsing?"
 description: "Understand how a parser turns tokens into an Abstract Syntax Tree (AST)."
 ---
 
-# What is Parsing?
-
 The **parser** is the second phase of our compiler. It takes the flat list of tokens from the lexer and builds a **tree** structure that shows the meaning and hierarchy of the code.
 
 ## What is Parsing?
 
 When you read a sentence like: **"The cat sat on the mat."** — your brain does not just see a list of words. It builds a tree of meaning:
 
-```
+```txt
 Sentence
 ├── Subject:   "The cat"
 ├── Verb:      "sat"
@@ -22,13 +20,13 @@ A parser does the same thing for code. It takes a flat list of tokens and builds
 
 **Input to parser** (from lexer):
 
-```
+```txt
 [Let] [Ident("x")] [Equals] [Number(10)] [Plus] [Number(20)] [Semicolon]
 ```
 
 **Output from parser** (the AST):
 
-```
+```txt
 LetStatement {
     name: "x",
     value: BinaryExpr {
@@ -51,7 +49,7 @@ Now we can *see* that `10 + 20` is the value. The tree captures the meaning.
 
 For example, this Pico code:
 
-```
+```txt
 if x > 0 {
     print(x);
 }
@@ -59,7 +57,7 @@ if x > 0 {
 
 Becomes this AST:
 
-```
+```txt
 IfStatement {
     condition: BinaryExpr {
         left:  Ident("x"),
@@ -80,7 +78,7 @@ IfStatement {
 In Pico, a **statement** is a complete instruction. Here are the statements we will support:
 
 | Statement | Example |
-|---|---|
+| --- | --- |
 | Let statement | `let x = 5;` |
 | Return statement | `return x + 1;` |
 | If statement | `if x > 0 { ... }` |
@@ -93,7 +91,7 @@ In Pico, a **statement** is a complete instruction. Here are the statements we w
 An **expression** is a piece of code that produces a value. Statements can *contain* expressions.
 
 | Expression | Example |
-|---|---|
+| --- | --- |
 | Number literal | `42`, `3.14` |
 | String literal | `"hello"` |
 | Boolean literal | `true`, `false` |
@@ -108,7 +106,7 @@ The parsing technique we will use is called **Recursive Descent Parsing**. It is
 
 The idea: we write one function for each grammar rule. Functions can call each other recursively.
 
-```
+```txt
 parse_program()
   └─ calls parse_statement()
         ├─ calls parse_let_statement()
@@ -132,7 +130,7 @@ We say `*` has **higher precedence** than `+`.
 
 In recursive descent, we handle this by having separate functions for each precedence level:
 
-```
+```txt
 parse_expression()        → lowest precedence
   → parse_comparison()    → <, >, <=, >=, ==, !=
     → parse_addition()    → +, -

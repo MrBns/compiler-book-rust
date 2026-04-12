@@ -3,9 +3,9 @@ title: "Getting Started"
 description: "Set up your Rust project and learn how to use this book."
 ---
 
-# Getting Started
+> *Book created by **Mr Binary Sniper** · GitHub: [@MrBns](https://github.com/MrBns)*
 
-## Welcome!
+## Welcome
 
 Hello! Welcome to **Compiler Book in Rust** 🦀
 
@@ -25,7 +25,7 @@ We will invent our own small language. We call it **Pico**.
 
 Here is a sample Pico program:
 
-```
+```txt
 let name: str = "Alice";
 let age:  int = 25;
 
@@ -98,7 +98,7 @@ cd pico
 
 You will see this folder structure:
 
-```
+```txt
 pico/
 ├── src/
 │   └── main.rs    ← our code goes here
@@ -123,7 +123,7 @@ cargo run
 
 You should see:
 
-```
+```txt
 Pico compiler is alive! 🦀
 ```
 
@@ -131,7 +131,7 @@ Pico compiler is alive! 🦀
 
 As we build our compiler, we will split the code into several files. Here is what the final structure will look like:
 
-```
+```txt
 pico/
 ├── src/
 │   ├── main.rs         ← glues everything together

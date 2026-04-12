@@ -3,8 +3,6 @@ title: "Structs & Properties"
 description: "Add structs with typed properties to Pico and compile them to TypeScript interfaces."
 ---
 
-# Structs & Properties
-
 So far, the only values Pico can work with are single pieces of data — one number, one string, one boolean. That is fine for small programs, but real programs deal with **things** that have multiple pieces of data attached to them. A user has a name and an age. A rectangle has a width and a height. A product has a name, a price, and a stock count.
 
 Without a way to bundle related data together, you end up with a mess of separate variables that are hard to track and easy to mix up. In this chapter we introduce **structs** — a way to define your own custom data types that group named fields together under a single type name. Structs are one of the most fundamental building blocks in typed languages, and they make Pico dramatically more expressive.
@@ -13,7 +11,7 @@ Without a way to bundle related data together, you end up with a mess of separat
 
 Let us say you are writing a program that works with two-dimensional points. Without structs you might write:
 
-```
+```txt
 let p1_x: float = 3.0;
 let p1_y: float = 4.0;
 let p2_x: float = 0.0;
@@ -22,7 +20,7 @@ let p2_y: float = 0.0;
 
 This already looks a bit unwieldy. But as soon as you need to pass a "point" to a function, things fall apart:
 
-```
+```txt
 // How do you write this function? You have to pass x and y separately.
 fn distance(ax: float, ay: float, bx: float, by: float): float {
     let dx: float = ax - bx;
@@ -37,7 +35,7 @@ Four parameters just to describe two points. And what if you mix them up? What i
 
 A struct solves this cleanly:
 
-```
+```txt
 struct Point {
     x: float,
     y: float,
@@ -66,7 +64,7 @@ Think of a struct definition as a **blueprint**. The blueprint says: "every `Per
 
 You define a struct with the `struct` keyword, followed by the struct's name, an opening brace, the list of fields, and a closing brace. Each field is written as `fieldname: Type`, and fields are separated by commas.
 
-```
+```txt
 struct Person {
     name: str,
     age:  int,
@@ -75,7 +73,7 @@ struct Person {
 
 Here are several more examples. Notice how each struct captures exactly the data it needs and nothing more:
 
-```
+```txt
 // A 2D point in space
 struct Point {
     x: float,
@@ -113,7 +111,7 @@ struct Student {
 
 Fields can use any of Pico's four built-in types — `int`, `float`, `str`, `bool` — or the name of another struct you have already defined. For example, a `Circle` could be defined using a `Point` struct for its center:
 
-```
+```txt
 struct Point {
     x: float,
     y: float,
@@ -133,7 +131,7 @@ Defining a struct just creates the blueprint. To actually use a struct, you need
 
 The syntax for creating an instance is: write the struct name, then `{ fieldname: value, ... }` inside braces. Every field defined in the struct must be provided, in any order.
 
-```
+```txt
 let origin: Point = Point { x: 0.0, y: 0.0 };
 let corner: Point = Point { x: 10.0, y: 5.0 };
 
@@ -153,7 +151,7 @@ The variable on the left is typed as the struct (e.g., `let alice: Person`). The
 
 If any field is missing, has the wrong type, or if you try to assign a `Person` to a variable declared as `Point`, the compiler will tell you immediately:
 
-```
+```txt
 let bad1: Person = Person { name: "Alice" };                 // ERROR: field `age` is missing
 let bad2: Person = Person { name: "Alice", age: "twenty" };  // ERROR: field `age` — expected int, found str
 let bad3: Point  = Person { name: "Alice", age: 25 };        // ERROR: expected Point, found Person
@@ -163,7 +161,7 @@ let bad3: Point  = Person { name: "Alice", age: 25 };        // ERROR: expected 
 
 Once you have a struct instance, you read its fields using the **dot operator** `.`. Write the variable name, then a dot, then the field name:
 
-```
+```txt
 let alice: Person = Person { name: "Alice", age: 25 };
 
 print(alice.name);   // output: Alice
@@ -172,7 +170,7 @@ print(alice.age);    // output: 25
 
 Property access works inside any expression. The type of `alice.name` is `str` (because that is how `name` was declared in the `Person` struct), and the type of `alice.age` is `int`. The compiler knows both of these and will type-check any further operations on those values.
 
-```
+```txt
 let alice: Person = Person { name: "Alice", age: 25 };
 let bob:   Person = Person { name: "Bob",   age: 30 };
 
@@ -184,7 +182,7 @@ let is_senior:    bool = alice.age >= 65;         // false
 
 You can also access fields of a struct that is itself a field of another struct, using chained dots:
 
-```
+```txt
 struct Point  { x: float, y: float }
 struct Circle { center: Point, radius: float }
 
@@ -202,7 +200,7 @@ print(c.center.y);   // 4.0
 
 One of the biggest benefits of structs is that they let you pass logically-related data to functions as a single, named argument. Compare the messy version with the struct version:
 
-```
+```txt
 // WITHOUT structs — confusing parameter list
 fn area_no_struct(width: float, height: float): float {
     return width * height;
@@ -218,7 +216,7 @@ The struct version is not only shorter — it is also *safer*. If you have a `wi
 
 Here is a more complete example that puts all the pieces together:
 
-```
+```txt
 struct Rectangle {
     width:  float,
     height: float,
@@ -260,7 +258,7 @@ The code reads almost like plain English. The function names and field names tog
 
 Functions can also *return* a struct value, just like they can return an `int` or a `str`. This is useful for "factory functions" that create a struct based on some inputs:
 
-```
+```txt
 struct Point {
     x: float,
     y: float,
@@ -291,7 +289,7 @@ In TypeScript, the natural equivalent of a Pico `struct` is an **interface**. A 
 Here is the full translation table:
 
 | Pico construct | TypeScript equivalent |
-|---|---|
+| --- | --- |
 | `struct Name { field: Type, ... }` | `interface Name { field: TSType; ... }` |
 | `let x: Name = Name { field: val }` | `const x: Name = { field: val }` |
 | `x.field` | `x.field` |
@@ -305,7 +303,7 @@ Let us walk through a complete example. Here is a Pico program that defines a `S
 
 **Pico source:**
 
-```
+```txt
 struct Student {
     full_name:  str,
     student_id: int,
@@ -429,7 +427,7 @@ These four types cover everything: defining a struct, creating an instance, and 
 
 The parser needs to recognise the new syntax. In terms of grammar rules, here is what changes:
 
-```
+```txt
 // A program can now contain struct definitions at the top level
 Statement → LetDecl | FnDef | StructDef | IfStmt | ReturnStmt | PrintStmt | ExprStmt
 
@@ -589,7 +587,7 @@ This is the complete type-checking logic for structs. Together, these three func
 Let us bring it all together. Here is everything you need to know about structs in Pico:
 
 | Feature | Syntax | What the compiler checks |
-|---------|--------|--------------------------|
+| --------- | -------- | -------------------------- |
 | Define a struct | `struct Name { field: Type, ... }` | No duplicate names, all types are valid |
 | Create an instance | `let x: Name = Name { field: val, ... }` | All fields present, types match |
 | Access a field | `x.field` | `x` must be a struct type that has `field` |

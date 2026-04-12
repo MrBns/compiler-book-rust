@@ -18,6 +18,26 @@ const chapters = [
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <!--
+      Anti-flash inline script — must run synchronously before the first paint.
+      It reads the saved theme-mode from localStorage and immediately sets
+      data-theme on <html> so the correct colour tokens are active before any
+      CSS is rendered.  Using is:inline keeps Astro from deferring this script.
+    -->
+    <script is:inline>
+      (function () {
+        try {
+          var mode = localStorage.getItem("theme-mode") || "device";
+          var theme =
+            mode === "dark" ? "dark"
+            : mode === "light" ? "light"
+            : window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light";
+          document.documentElement.setAttribute("data-theme", theme);
+        } catch (_) {}
+      })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Compiler in Rust — Book</title>
     <meta name="description" content="Learn how to build a compiler in Rust. Easy English, lots of code examples." />
@@ -28,16 +48,28 @@ const chapters = [
   <body>
     <!-- Navbar -->
     <nav class="navbar">
-      <a href="/" class="navbar__logo">Compiler<span>Book</span> 🦀</a>
-      <nav class="navbar__nav">
-        <a href="/docs/getting-started">Guide</a>
-        <a href="https://github.com/MrBns/compiler-book-rust" target="_blank">GitHub</a>
-      </nav>
-      <div class="navbar__right">
-        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-          <span id="themeIcon">🌙</span>
-          <span id="themeLabel">Dark</span>
-        </button>
+      <!-- navbar__inner provides the flex row layout (logo | links | theme toggle) -->
+      <div class="navbar__inner">
+        <a href="/" class="navbar__logo">Compiler<span>Book</span> 🦀</a>
+        <nav class="navbar__nav">
+          <a href="/docs/getting-started">Guide</a>
+          <a href="https://github.com/MrBns/compiler-book-rust" target="_blank">GitHub</a>
+        </nav>
+        <div class="navbar__right">
+          <!-- theme dropdown: shows current mode (icon + label + chevron); opens panel on click -->
+          <div class="theme-dropdown" id="themeDropdown">
+            <button class="theme-dropdown__trigger" id="themeDropdownTrigger" aria-haspopup="true" aria-expanded="false" aria-label="Select color theme">
+              <span id="themeDropdownIcon">💻</span>
+              <span id="themeDropdownLabel">Device</span>
+              <span class="theme-dropdown__chevron">▾</span>
+            </button>
+            <div class="theme-dropdown__menu" id="themeDropdownMenu" role="menu">
+              <button class="theme-dropdown__item" data-mode="light" role="menuitem">☀️ Light</button>
+              <button class="theme-dropdown__item" data-mode="dark"  role="menuitem">🌙 Dark</button>
+              <button class="theme-dropdown__item" data-mode="device" role="menuitem">💻 Device</button>
+            </div>
+          </div>
+        </div>
       </div>
     </nav>
 
@@ -71,23 +103,59 @@ const chapters = [
 
     <script>
       const html = document.documentElement;
-      const toggleBtn = document.getElementById("themeToggle");
-      const themeIcon = document.getElementById("themeIcon");
-      const themeLabel = document.getElementById("themeLabel");
+      const dropdown = document.getElementById("themeDropdown");
+      const trigger  = document.getElementById("themeDropdownTrigger");
+      const icon     = document.getElementById("themeDropdownIcon");
+      const label    = document.getElementById("themeDropdownLabel");
+      const items    = document.querySelectorAll<HTMLButtonElement>(".theme-dropdown__item");
 
-      const saved = localStorage.getItem("theme");
-      if (saved === "dark" || (!saved && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
-        html.setAttribute("data-theme", "dark");
-        if (themeIcon) themeIcon.textContent = "☀️";
-        if (themeLabel) themeLabel.textContent = "Light";
+      const MODE_META: Record<string, { icon: string; label: string }> = {
+        light:  { icon: "☀️",  label: "Light"  },
+        dark:   { icon: "🌙",  label: "Dark"   },
+        device: { icon: "💻",  label: "Device" },
+      };
+
+      function applyMode(mode: string) {
+        const meta = MODE_META[mode] ?? MODE_META.device;
+        if (mode === "device") {
+          const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+          html.setAttribute("data-theme", prefersDark ? "dark" : "light");
+        } else {
+          html.setAttribute("data-theme", mode);
+        }
+        if (icon)  icon.textContent  = meta.icon;
+        if (label) label.textContent = meta.label;
+        items.forEach((btn) => btn.classList.toggle("active", btn.dataset.mode === mode));
       }
 
-      toggleBtn?.addEventListener("click", () => {
-        const isDark = html.getAttribute("data-theme") === "dark";
-        html.setAttribute("data-theme", isDark ? "light" : "dark");
-        localStorage.setItem("theme", isDark ? "light" : "dark");
-        if (themeIcon) themeIcon.textContent = isDark ? "🌙" : "☀️";
-        if (themeLabel) themeLabel.textContent = isDark ? "Dark" : "Light";
+      // Restore saved preference (default: device)
+      const saved = localStorage.getItem("theme-mode") ?? "device";
+      applyMode(saved);
+
+      // Open / close dropdown
+      trigger?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        dropdown?.classList.toggle("open");
+        trigger.setAttribute("aria-expanded", String(dropdown?.classList.contains("open") ?? false));
+      });
+
+      // Select a mode
+      items.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const mode = btn.dataset.mode ?? "device";
+          localStorage.setItem("theme-mode", mode);
+          applyMode(mode);
+          dropdown?.classList.remove("open");
+          trigger?.setAttribute("aria-expanded", "false");
+        });
+      });
+
+      // Close on outside click
+      document.addEventListener("click", (e) => {
+        if (dropdown?.classList.contains("open") && !dropdown.contains(e.target as Node)) {
+          dropdown.classList.remove("open");
+          trigger?.setAttribute("aria-expanded", "false");
+        }
       });
     </script>
   </body>

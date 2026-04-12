@@ -3,8 +3,6 @@ title: "Our Project Plan"
 description: "Design the Pico language we will compile and set up our Rust project files."
 ---
 
-# Our Project Plan
-
 Before we write any compiler code, we need a plan. What language will we compile? What features will it have? Let us decide all this now.
 
 ## The Pico Language
@@ -13,7 +11,7 @@ We will invent our own small language. We call it **Pico** (it means "small" in 
 
 Here is a complete Pico program that shows all features:
 
-```
+```txt
 // This is a comment in Pico
 
 // Declare variables with type annotations
@@ -55,7 +53,7 @@ Simple, clean, and **type-safe**. Variables and functions carry their types so t
 Here is a list of everything Pico can do:
 
 | Feature | Example |
-|---|---|
+| --- | --- |
 | Typed variable | `let x: int = 5;` |
 | String | `let s: str = "hello";` |
 | Boolean | `let ok: bool = true;` |
